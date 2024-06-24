@@ -55,7 +55,9 @@ const Login = () => {
 
         if (login.success) {
           if (login.isVerified) {
-            setCookie("jotter", login.user, { sameSite: "lax" });
+            setCookie("jotter", login.user, {
+              sameSite: "lax",
+            });
             router.push("/jotter");
           } else {
             router.push("/sending?type=verification");
