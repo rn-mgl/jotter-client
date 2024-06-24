@@ -2,32 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+* {
+  font-smooth: "always";
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+.custom-grid-lines {
+  background-image: linear-gradient(#0d0d0d50 0.05em, transparent 0.05em),
+    linear-gradient(90deg, #0d0d0d50 0.05em, transparent 0.05em);
+  background-size: 5rem 5rem;
+}
+
+@media screen and (min-width: 768px) {
+  .custom-grid-lines {
+    background-size: 8rem 8rem;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+@media screen and (min-width: 1440px) {
+  .custom-grid-lines {
+    background-size: 12rem 12rem;
   }
 }
