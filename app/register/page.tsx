@@ -46,8 +46,6 @@ const Register = () => {
         withCredentials: true,
       });
 
-      console.log(token);
-
       if (token.csrf_token) {
         const { data: register } = await axios.post(
           `${url}/register`,
@@ -70,8 +68,8 @@ const Register = () => {
   };
 
   return (
-    <div className="w-full h-full min-h-screen flex flex-col items-center justify-center p-4 pb-0 t:p-10 t:pb-0">
-      <div className="w-full h-full flex flex-col items-center justify-start max-w-screen-ls gap-6">
+    <div className="w-full h-full flex flex-col items-center justify-center">
+      <div className="w-full h-full flex flex-col items-center justify-center max-w-screen-ls">
         <form
           onSubmit={(e) => handleSubmitRegister(e)}
           className="max-w-screen-ml w-full flex flex-col items-start justify-center gap-4"

@@ -3,11 +3,13 @@ import React from "react";
 import hero from "@/public/landing/hero.svg";
 import scribble from "@/public/landing/scribble.svg";
 import Link from "next/link";
+import Logo from "../global/Logo";
 
 const Hero = () => {
   return (
-    <div className="custom-grid-lines w-full h-full min-h-screen flex flex-col items-center justify-center p-4 pb-0 t:p-10 t:pb-0">
-      <div className="w-full h-full flex flex-col items-center justify-start max-w-screen-ls gap-6 mt-auto">
+    <div className="custom-grid-lines w-full h-full min-h-screen flex flex-col items-center justify-center p-4 pb-0 t:p-8 t:pb-0">
+      <Logo />
+      <div className="w-full h-full flex flex-col items-center justify-start max-w-screen-ll gap-6 mt-auto">
         <div
           className="w-full flex flex-col gap-2 items-center justify-center t:gap-6 
                     h-full mt-auto"

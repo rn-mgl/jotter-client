@@ -70,8 +70,8 @@ const Login = () => {
   };
 
   return (
-    <div className="w-full h-full min-h-screen flex flex-col items-center justify-center p-4 pb-0 t:p-10 t:pb-0">
-      <div className="w-full h-full flex flex-col items-center justify-start max-w-screen-ls gap-6">
+    <div className="w-full h-full flex flex-col items-center justify-start">
+      <div className="w-full h-full flex flex-col items-center justify-center max-w-screen-ll">
         <form
           onSubmit={(e) => handleSubmitLogin(e)}
           className="max-w-screen-ml w-full flex flex-col items-start justify-center gap-4"

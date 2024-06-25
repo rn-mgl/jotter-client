@@ -35,9 +35,14 @@ const config: Config = {
           "0%, 100%": { transform: "translateY(-1rem)" },
           "50%": { transform: "translateY(1rem)" },
         },
+        fadeIn: {
+          "0%": { opacity: "0%", transform: "translateY(-2rem)" },
+          "100%": { opacity: "100%", transform: "translateY(0rem)" },
+        },
       },
       animation: {
         float: "float 5s ease-in-out infinite",
+        fadeIn: "fadeIn 150ms ease-in-out",
       },
     },
   },
