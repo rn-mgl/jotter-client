@@ -3,6 +3,7 @@
 import { useGlobalContext } from "@/context";
 import axios from "axios";
 import { getCookie } from "cookies-next";
+import { sensitiveHeaders } from "http2";
 import React, { LegacyRef, MutableRefObject } from "react";
 import {
   AiOutlineClose,
@@ -26,6 +27,7 @@ const NoteModal: React.FC<NoteModalProps> = (props) => {
     title: "",
     content: "",
   });
+  const [isLoading, setIsLoading] = React.useState(false);
   const fileRef = React.useRef<HTMLInputElement>(null);
 
   const { url } = useGlobalContext();
@@ -46,6 +48,7 @@ const NoteModal: React.FC<NoteModalProps> = (props) => {
 
   const saveNote = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const { data: token } = await axios.get(`${url}/csrf_token`, {
         withCredentials: true,
@@ -68,6 +71,8 @@ const NoteModal: React.FC<NoteModalProps> = (props) => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -129,8 +134,10 @@ const NoteModal: React.FC<NoteModalProps> = (props) => {
             </label>
 
             <button
+              disabled={isLoading}
               form="createNoteForm"
-              className="w-8 h-8 text-accent hover:bg-accent/30 transition-all rounded-full flex items-center justify-center text-xl"
+              className="w-8 h-8 text-accent hover:bg-accent/30 transition-all rounded-full flex items-center justify-center text-xl
+                        disabled:text-neutral-500"
             >
               <AiOutlineSend />
             </button>

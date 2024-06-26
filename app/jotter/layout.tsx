@@ -9,7 +9,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <div className="flex flex-col items-center justify-center w-full h-screen p-4 t:p-10 gap-6">
+    <div className="flex flex-col items-center justify-start w-full min-h-screen h-full p-4 t:p-10 gap-6">
       <div className="w-full flex flex-row items-center justify-between">
         <Logo url="/jotter" />
         <button

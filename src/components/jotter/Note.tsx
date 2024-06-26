@@ -1,22 +1,30 @@
 import React from "react";
+import { AiOutlineClose } from "react-icons/ai";
+import { CiStickyNote } from "react-icons/ci";
 
 interface NoteProps {
-  title: string;
-  content: string;
-  file_content: string | null;
+  handleActiveNote: () => void;
 }
 
 const Note: React.FC<NoteProps> = (props) => {
   return (
     <div
-      className="w-full cursor-pointer border-[1px] border-complementary hover:shadow-[0.2rem_0.2rem_#0D0D0D] transition-all
-                font-poppins flex flex-col gap-4 bg-primary"
+      className="w-full h-full flex flex-col items-center justify-center fixed top-0 left-0 z-50 backdrop-blur-md animate-fadeIn p-4
+            bg-complementary/30 t:p-8"
     >
-      <p className="font-bold p-2 border-b-[1px] border-accent">
-        {props.title}
-      </p>
-
-      <p className="text-sm p-2">{props.content}</p>
+      <div className="w-full h-full flex flex-col bg-primary rounded-md border-[1px] max-w-screen-t">
+        <div className="flex flex-row p-2 text-accent w-full items-center justify-between text-xl border-b-2 t">
+          <div>
+            <CiStickyNote />
+          </div>
+          <button
+            onClick={props.handleActiveNote}
+            className="hover:bg-complementary/10 p-2 rounded-full transition-all"
+          >
+            <AiOutlineClose />
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
