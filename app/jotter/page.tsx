@@ -5,7 +5,7 @@ import NoteCard from "@/src/components/jotter/NoteCard";
 import NoteModal from "@/src/components/jotter/NoteModal";
 import axios from "axios";
 import React from "react";
-import { AiOutlinePlus } from "react-icons/ai";
+import { AiOutlinePlus, AiOutlineSearch } from "react-icons/ai";
 
 interface NoteData {
   title: string;
@@ -68,8 +68,24 @@ const Jotter = () => {
           ) : null}
 
           {activeNote ? (
-            <Note handleActiveNote={() => handleActiveNote(activeNote)} />
+            <Note
+              handleActiveNote={handleActiveNote}
+              getNotes={getNotes}
+              activeNote={activeNote}
+            />
           ) : null}
+
+          <div className="flex flex-row items-center justify-center w-full ls:max-w-screen-ml ml-auto relative">
+            <input
+              type="text"
+              className="w-full p-2 bg-primary border-[1px] border-complementary focus:shadow-[0.2rem_0.2rem_#0D0D0D] 
+                        outline-none transition-all font-poppins text-sm"
+              placeholder="Search..."
+            />
+            <div className="absolute right-0.5 px-3 py-2.5 bg-primary text-neutral-500">
+              <AiOutlineSearch />
+            </div>
+          </div>
 
           <div className="flex flex-col w-full items-center justify-start gap-4 t:grid t:grid-cols-2 ls:grid-cols-3 ll:grid-cols-4">
             {mappedNotes}

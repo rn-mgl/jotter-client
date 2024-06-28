@@ -108,6 +108,7 @@ const NoteModal: React.FC<NoteModalProps> = (props) => {
             placeholder="Title..."
             className="p-2 px-4 font-semibold bg-transparent outline-none"
             onChange={(e) => handleNoteData(e)}
+            value={noteData.title}
           />
           <textarea
             name="content"
@@ -115,6 +116,7 @@ const NoteModal: React.FC<NoteModalProps> = (props) => {
             className="w-full h-full resize-none rounded-md focus:outline-none p-4 bg-transparent text-sm"
             placeholder="Jot down..."
             onChange={(e) => handleNoteData(e)}
+            value={noteData.content}
           ></textarea>
 
           <div className="w-full p-2 border-t-2 font-medium flex flex-row items-center justify-between">
@@ -135,7 +137,6 @@ const NoteModal: React.FC<NoteModalProps> = (props) => {
 
             <button
               disabled={isLoading}
-              form="createNoteForm"
               className="w-8 h-8 text-accent hover:bg-accent/30 transition-all rounded-full flex items-center justify-center text-xl
                         disabled:text-neutral-500"
             >
