@@ -11,6 +11,7 @@ import {
   AiOutlineSave,
 } from "react-icons/ai";
 import { CiStickyNote } from "react-icons/ci";
+import DeleteConfirmation from "./DeleteConfirmation";
 
 interface NoteProps {
   activeNote: number;
@@ -37,6 +38,8 @@ const Note: React.FC<NoteProps> = (props) => {
   });
   const [isLoading, setIsLoading] = React.useState(false);
   const [selectedFile, setSelectedFile] = React.useState<SelectedFileProps>();
+  const [activeDeleteConfirmation, setActiveDeleteConfirmation] =
+    React.useState(false);
   const fileRef = React.useRef<HTMLInputElement>(null);
 
   const { url } = useGlobalContext();
@@ -99,6 +102,10 @@ const Note: React.FC<NoteProps> = (props) => {
     });
   };
 
+  const handleActiveDeleteConfirmation = () => {
+    setActiveDeleteConfirmation((prev) => !prev);
+  };
+
   const updateNote = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -149,6 +156,14 @@ const Note: React.FC<NoteProps> = (props) => {
             bg-complementary/30 t:p-8"
     >
       <div className="w-full h-full flex flex-col bg-primary rounded-md border-[1px] max-w-screen-t">
+        {activeDeleteConfirmation ? (
+          <DeleteConfirmation
+            handleActiveDeleteConfirmation={handleActiveDeleteConfirmation}
+            handleActiveNote={props.handleActiveNote}
+            getNotes={props.getNotes}
+            activeNote={props.activeNote}
+          />
+        ) : null}
         <div className="flex flex-row p-2 text-accent w-full items-center justify-between text-xl border-b-2 t">
           <div>
             <CiStickyNote />
@@ -237,24 +252,35 @@ const Note: React.FC<NoteProps> = (props) => {
           ) : null}
 
           <div className="w-full p-2 border-t-2 font-medium flex flex-row items-center justify-between">
-            <label
-              htmlFor="file_content"
-              title="Upload Image"
-              className="w-8 h-8 text-accent hover:bg-accent/30 transition-all rounded-full flex items-center justify-center text-xl
+            <div className="flex flex-row gap-2 items-center justify-center text-accent">
+              <button
+                onClick={handleActiveDeleteConfirmation}
+                title="Delete Note"
+                type="button"
+                className="w-8 h-8  hover:bg-accent/30 transition-all rounded-full flex items-center justify-center text-xl
                           cursor-pointer"
-            >
-              <input
-                type="file"
-                accept="image/*"
-                name="file_content"
-                id="file_content"
-                className="hidden"
-                onChange={(e) => handleSelectedFile(e)}
-                ref={fileRef}
-              />
-              <AiOutlineFileImage />
-            </label>
+              >
+                <AiOutlineDelete />
+              </button>
 
+              <label
+                htmlFor="file_content"
+                title="Upload Image"
+                className="w-8 h-8  hover:bg-accent/30 transition-all rounded-full flex items-center justify-center text-xl
+                          cursor-pointer"
+              >
+                <input
+                  type="file"
+                  accept="image/*"
+                  name="file_content"
+                  id="file_content"
+                  className="hidden"
+                  onChange={(e) => handleSelectedFile(e)}
+                  ref={fileRef}
+                />
+                <AiOutlineFileImage />
+              </label>
+            </div>
             <button
               disabled={isLoading}
               title="Save"
