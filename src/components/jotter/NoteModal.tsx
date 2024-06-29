@@ -3,12 +3,13 @@
 import { useGlobalContext } from "@/context";
 import axios from "axios";
 import { getCookie } from "cookies-next";
-import { sensitiveHeaders } from "http2";
-import React, { LegacyRef, MutableRefObject } from "react";
+import Image from "next/image";
+import React from "react";
 import {
   AiOutlineClose,
+  AiOutlineDelete,
   AiOutlineFileImage,
-  AiOutlineSend,
+  AiOutlineSave,
 } from "react-icons/ai";
 import { CiStickyNote } from "react-icons/ci";
 
@@ -22,11 +23,17 @@ interface NoteData {
   content: string;
 }
 
+interface SelectedFileProps {
+  url: string;
+  raw: File | null;
+}
+
 const NoteModal: React.FC<NoteModalProps> = (props) => {
   const [noteData, setNoteData] = React.useState<NoteData>({
     title: "",
     content: "",
   });
+  const [selectedFile, setSelectedFile] = React.useState<SelectedFileProps>();
   const [isLoading, setIsLoading] = React.useState(false);
   const fileRef = React.useRef<HTMLInputElement>(null);
 
@@ -46,6 +53,27 @@ const NoteModal: React.FC<NoteModalProps> = (props) => {
     });
   };
 
+  const handleSelectedFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files;
+
+    if (!file || !file.length) {
+      return;
+    }
+
+    const fileData = file[0];
+    const url = URL.createObjectURL(fileData);
+
+    setSelectedFile({ url, raw: fileData });
+  };
+
+  const removeSelectedFile = () => {
+    setSelectedFile({ url: "", raw: null });
+    if (fileRef.current) {
+      fileRef.current.files = null;
+      fileRef.current.value = "";
+    }
+  };
+
   const saveNote = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
@@ -54,15 +82,19 @@ const NoteModal: React.FC<NoteModalProps> = (props) => {
         withCredentials: true,
       });
 
+      const formData: any = new FormData();
+      formData.append("title", noteData.title);
+      formData.append("content", noteData.content);
+      formData.append("file_content", selectedFile?.raw);
+
       if (token.csrf_token) {
-        const { data: note } = await axios.post(
-          `${url}/note`,
-          { ...noteData, file_content: fileRef.current?.value },
-          {
-            headers: { "X-XSRF-TOKEN": getCookie("XSRF-TOKEN") },
-            withCredentials: true,
-          }
-        );
+        const { data: note } = await axios.post(`${url}/note`, formData, {
+          headers: {
+            "X-XSRF-TOKEN": getCookie("XSRF-TOKEN"),
+            "Content-Type": "mutipart/form-data",
+          },
+          withCredentials: true,
+        });
 
         if (note) {
           props.getNotes();
@@ -119,10 +151,35 @@ const NoteModal: React.FC<NoteModalProps> = (props) => {
             value={noteData.content}
           ></textarea>
 
+          {selectedFile?.raw ? (
+            <div
+              className="w-full animate-fadeIn p-2 bg-accent/10 rounded-md max-w-72 flex flex-col items-end justify-center
+                        relative t:max-w-96 t:w-fit gap-2"
+            >
+              <Image
+                src={selectedFile.url}
+                alt="selectedFile"
+                className="rounded-md"
+                width={400}
+                height={400}
+              />
+              <button
+                type="button"
+                onClick={removeSelectedFile}
+                title="Remove File"
+                className="text-accent hover:bg-accent hover:text-primary transition-all p-1 rounded-full"
+              >
+                <AiOutlineDelete />
+              </button>
+            </div>
+          ) : null}
+
           <div className="w-full p-2 border-t-2 font-medium flex flex-row items-center justify-between">
             <label
               htmlFor="file_content"
-              className="w-8 h-8 text-accent hover:bg-accent/30 transition-all rounded-full flex items-center justify-center text-xl"
+              title="Upload Image"
+              className="w-8 h-8 text-accent hover:bg-accent/30 transition-all rounded-full flex items-center justify-center text-xl
+                        cursor-pointer"
             >
               <input
                 type="file"
@@ -130,6 +187,7 @@ const NoteModal: React.FC<NoteModalProps> = (props) => {
                 name="file_content"
                 id="file_content"
                 className="hidden"
+                onChange={(e) => handleSelectedFile(e)}
                 ref={fileRef}
               />
               <AiOutlineFileImage />
@@ -137,10 +195,11 @@ const NoteModal: React.FC<NoteModalProps> = (props) => {
 
             <button
               disabled={isLoading}
+              title="Save"
               className="w-8 h-8 text-accent hover:bg-accent/30 transition-all rounded-full flex items-center justify-center text-xl
-                        disabled:text-neutral-500"
+                        disabled:text-neutral-500 cursor-pointer"
             >
-              <AiOutlineSend />
+              <AiOutlineSave />
             </button>
           </div>
         </form>

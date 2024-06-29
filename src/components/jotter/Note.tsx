@@ -1,11 +1,14 @@
 import { useGlobalContext } from "@/context";
 import axios from "axios";
 import { getCookie } from "cookies-next";
+import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 import {
   AiOutlineClose,
+  AiOutlineDelete,
   AiOutlineFileImage,
-  AiOutlineSend,
+  AiOutlineSave,
 } from "react-icons/ai";
 import { CiStickyNote } from "react-icons/ci";
 
@@ -21,6 +24,11 @@ interface NoteDataProps {
   file_content: string | null;
 }
 
+interface SelectedFileProps {
+  url: string;
+  raw: File | null;
+}
+
 const Note: React.FC<NoteProps> = (props) => {
   const [noteData, setNoteData] = React.useState<NoteDataProps>({
     title: "",
@@ -28,7 +36,8 @@ const Note: React.FC<NoteProps> = (props) => {
     file_content: null,
   });
   const [isLoading, setIsLoading] = React.useState(false);
-  const fileRef = React.useRef(null);
+  const [selectedFile, setSelectedFile] = React.useState<SelectedFileProps>();
+  const fileRef = React.useRef<HTMLInputElement>(null);
 
   const { url } = useGlobalContext();
 
@@ -61,18 +70,59 @@ const Note: React.FC<NoteProps> = (props) => {
     });
   };
 
+  const handleSelectedFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files;
+
+    if (!file || !file.length) {
+      return;
+    }
+
+    const fileData = file[0];
+    const url = URL.createObjectURL(fileData);
+    setSelectedFile({ url, raw: fileData });
+  };
+
+  const removeSelectedFile = () => {
+    setSelectedFile({ url: "", raw: null });
+    if (fileRef.current) {
+      fileRef.current.files = null;
+      fileRef.current.value = "";
+    }
+  };
+
+  const removeUploadedFile = () => {
+    setNoteData((prev) => {
+      return {
+        ...prev,
+        file_content: null,
+      };
+    });
+  };
+
   const updateNote = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
       const { data: token } = await axios.get(`${url}/csrf_token`, {
         withCredentials: true,
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
+      const formData: any = new FormData();
+      formData.append("title", noteData.title);
+      formData.append("content", noteData.content);
+      formData.append("_method", "PATCH");
+
+      if (selectedFile?.raw) {
+        formData.append("file_content", selectedFile?.raw);
+      } else if (noteData.file_content) {
+        formData.append("file_content", noteData.file_content);
+      }
+
       if (token.csrf_token) {
-        const { data: note } = await axios.patch(
+        const { data: note } = await axios.post(
           `${url}/note/${props.activeNote}`,
-          { ...noteData },
+          formData,
           {
             headers: { "X-XSRF-TOKEN": getCookie("XSRF-TOKEN") },
             withCredentials: true,
@@ -105,7 +155,7 @@ const Note: React.FC<NoteProps> = (props) => {
           </div>
           <button
             onClick={() => props.handleActiveNote(props.activeNote)}
-            className="hover:bg-complementary/10 p-2 rounded-full transition-all"
+            className="hover:bg-accent/10 p-2 rounded-full transition-all"
           >
             <AiOutlineClose />
           </button>
@@ -135,10 +185,63 @@ const Note: React.FC<NoteProps> = (props) => {
             onChange={(e) => handleNoteData(e)}
           ></textarea>
 
+          {selectedFile?.raw ? (
+            <div
+              className="w-full animate-fadeIn p-2 bg-accent/10 rounded-md max-w-60 flex flex-col items-end justify-center
+                        relative gap-2"
+            >
+              <Image
+                src={selectedFile.url}
+                alt="selectedFile"
+                className="rounded-md"
+                width={500}
+                height={500}
+              />
+              <button
+                type="button"
+                onClick={removeSelectedFile}
+                title="Remove File"
+                className="text-accent hover:bg-accent hover:text-primary transition-all p-1 rounded-full"
+              >
+                <AiOutlineClose />
+              </button>
+            </div>
+          ) : noteData.file_content ? (
+            <div
+              className="w-full animate-fadeIn p-2 bg-accent/10 rounded-md max-w-60 flex flex-col items-end justify-center
+                    relative gap-2"
+            >
+              <Link
+                href={noteData.file_content}
+                className="w-full cursor-pointer group "
+                target="_blank"
+              >
+                <Image
+                  src={noteData.file_content}
+                  alt="selectedFile"
+                  className="rounded-md group-hover:opacity-80 transition-all"
+                  width={800}
+                  height={800}
+                />
+              </Link>
+
+              <button
+                type="button"
+                onClick={removeUploadedFile}
+                title="Remove File"
+                className=" text-accent hover:bg-accent hover:text-primary transition-all p-1 rounded-full"
+              >
+                <AiOutlineDelete />
+              </button>
+            </div>
+          ) : null}
+
           <div className="w-full p-2 border-t-2 font-medium flex flex-row items-center justify-between">
             <label
               htmlFor="file_content"
-              className="w-8 h-8 text-accent hover:bg-accent/30 transition-all rounded-full flex items-center justify-center text-xl"
+              title="Upload Image"
+              className="w-8 h-8 text-accent hover:bg-accent/30 transition-all rounded-full flex items-center justify-center text-xl
+                          cursor-pointer"
             >
               <input
                 type="file"
@@ -146,6 +249,7 @@ const Note: React.FC<NoteProps> = (props) => {
                 name="file_content"
                 id="file_content"
                 className="hidden"
+                onChange={(e) => handleSelectedFile(e)}
                 ref={fileRef}
               />
               <AiOutlineFileImage />
@@ -153,10 +257,11 @@ const Note: React.FC<NoteProps> = (props) => {
 
             <button
               disabled={isLoading}
+              title="Save"
               className="w-8 h-8 text-accent hover:bg-accent/30 transition-all rounded-full flex items-center justify-center text-xl
                         disabled:text-neutral-500"
             >
-              <AiOutlineSend />
+              <AiOutlineSave />
             </button>
           </div>
         </form>

@@ -1,5 +1,5 @@
-import Link from "next/link";
 import React from "react";
+import { AiOutlinePaperClip } from "react-icons/ai";
 
 interface NoteCardProps {
   title: string;
@@ -34,13 +34,22 @@ const NoteCard: React.FC<NoteCardProps> = (props) => {
         {props.content || "No Content"}
       </p>
 
-      <p
+      {props.file_content ? (
+        <div
+          className="w-fit bottom-1 right-1 absolute text-accent"
+          title="Contains a File"
+        >
+          <AiOutlinePaperClip />
+        </div>
+      ) : null}
+
+      <div
         className="text-xs font-poppins font-light text-neutral-500 p-2 pb-1 absolute w-full
                   bottom-0 hidden group-hover:flex group-hover:animate-fadeIn"
       >
         {new Date(props.updated_at).toLocaleDateString()} |{" "}
         {new Date(props.updated_at).toLocaleTimeString()}
-      </p>
+      </div>
     </div>
   );
 };

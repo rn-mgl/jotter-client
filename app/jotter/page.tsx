@@ -52,7 +52,6 @@ const Jotter = () => {
 
   const getNotes = React.useCallback(async () => {
     try {
-      console.log(1);
       const {
         data: { notes, user },
       } = await axios.get(`${url}/note`, {
