@@ -50,10 +50,16 @@ const Profile = () => {
       <div className="w-full h-full flex flex-col items-center justify-start relative">
         <div className="w-full flex flex-col h-full items-center justify-start gap-6 max-w-screen-ll t:flex-row t:gap-10">
           {canEditProfile ? (
-            <EditProfile handleCanEditProfile={handleCanEditProfile} />
+            <EditProfile
+              getUserData={getUserData}
+              handleCanEditProfile={handleCanEditProfile}
+            />
           ) : null}
 
-          <div className="aspect-square bg-accent/30 w-full ls:max-w-96"></div>
+          <div
+            style={{ backgroundImage: user.image && `url(${user.image})` }}
+            className="aspect-square bg-accent/30 w-full ls:max-w-96 bg-center bg-cover"
+          ></div>
 
           <div className="w-full h-[1px] bg-complementary/30 t:w-[1px] t:h-full t:min-h-64 ls:min-h-96"></div>
 

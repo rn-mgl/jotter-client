@@ -9,10 +9,15 @@ import React from "react";
 import { AiOutlineLogout } from "react-icons/ai";
 import { BiChevronDown } from "react-icons/bi";
 
+interface UserProps {
+  image: string | null;
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const [activeMoreActions, setActiveMoreActions] = React.useState(false);
+  const [user, setUser] = React.useState<UserProps>();
   const { url } = useGlobalContext();
   const router = useRouter();
   const path = usePathname();
@@ -45,6 +50,24 @@ export default function RootLayout({
     }
   };
 
+  const getUser = React.useCallback(async () => {
+    try {
+      const { data: user } = await axios.get(`${url}/profile`, {
+        withCredentials: true,
+      });
+
+      if (user) {
+        setUser(user);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [url]);
+
+  React.useEffect(() => {
+    getUser();
+  }, [getUser]);
+
   return (
     <div className="flex flex-col items-center justify-start w-full min-h-screen h-full p-4 t:p-10 gap-6">
       <div className="w-full flex flex-row items-center justify-between">
@@ -52,9 +75,10 @@ export default function RootLayout({
 
         <div className="flex flex-row gap-2 items-center justify-center">
           <Link
+            style={{ backgroundImage: user?.image ? `url(${user.image})` : "" }}
             href={`/jotter/profile`}
             title="Profile"
-            className={`w-8 h-8 min-w-8 min-h-8 bg-accent t:w-10 t:h-10 t:min-w-10 t:min-h-10
+            className={`w-8 h-8 min-w-8 min-h-8 bg-accent t:w-10 t:h-10 t:min-w-10 t:min-h-10 bg-center bg-cover
                       ${
                         path === "/jotter/profile" &&
                         "shadow-[0.2rem_0.2rem_#0D0D0D] transition-all"
