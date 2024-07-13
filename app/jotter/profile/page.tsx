@@ -1,9 +1,10 @@
 "use client";
 import { useGlobalContext } from "@/context";
+import ChangePassword from "@/src/components/profile/ChangePassword";
 import EditProfile from "@/src/components/profile/EditProfile";
 import axios from "axios";
 import React from "react";
-import { AiOutlineEdit } from "react-icons/ai";
+import { AiOutlineEdit, AiOutlineLock } from "react-icons/ai";
 
 interface UserProps {
   first_name: string;
@@ -20,11 +21,16 @@ const Profile = () => {
     image: "",
   });
   const [canEditProfile, setCanEditProfile] = React.useState(false);
+  const [canChangePassword, setCanChangePassword] = React.useState(false);
 
   const { url } = useGlobalContext();
 
   const handleCanEditProfile = () => {
     setCanEditProfile((prev) => !prev);
+  };
+
+  const handleCanChangePassword = () => {
+    setCanChangePassword((prev) => !prev);
   };
 
   const getUserData = React.useCallback(async () => {
@@ -48,12 +54,16 @@ const Profile = () => {
   return (
     <div className="w-full h-full flex flex-col items-center justify-start">
       <div className="w-full h-full flex flex-col items-center justify-start relative">
-        <div className="w-full flex flex-col h-full items-center justify-start gap-6 max-w-screen-ll t:flex-row t:gap-10">
+        <div className="w-full flex flex-col h-full items-center justify-center gap-6 max-w-screen-ll t:flex-row t:gap-10">
           {canEditProfile ? (
             <EditProfile
               getUserData={getUserData}
               handleCanEditProfile={handleCanEditProfile}
             />
+          ) : null}
+
+          {canChangePassword ? (
+            <ChangePassword handleCanChangePassword={handleCanChangePassword} />
           ) : null}
 
           <div
@@ -85,6 +95,14 @@ const Profile = () => {
             <p className="font-poppins text-sm font-light italic">
               {user.email}
             </p>
+
+            <button
+              onClick={handleCanChangePassword}
+              className="font-poppins text-accent font-light mt-auto mr-auto flex 
+                        flex-row gap-1 items-center justify-center hover:underline hover:underline-offset-2"
+            >
+              change password <AiOutlineLock />
+            </button>
           </div>
         </div>
       </div>
