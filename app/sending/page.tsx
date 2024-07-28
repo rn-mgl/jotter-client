@@ -14,6 +14,7 @@ const Message = () => {
 
   const message = {
     verification: "We are currently sending your verification mail.",
+    reset: "We are currently sending your reset link.",
   };
 
   const handleResendEmail = async () => {

@@ -1,31 +1,25 @@
 "use client";
-
-import React from "react";
-import axios from "axios";
 import { useGlobalContext } from "@/context";
-import { getCookie, setCookie } from "cookies-next";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import axios from "axios";
+import { getCookie } from "cookies-next";
+import { useParams, useRouter } from "next/navigation";
+import React from "react";
 
-interface LoginData {
-  email: string;
-  password: string;
-}
-
-const Login = () => {
-  const [loginData, setLoginData] = React.useState<LoginData>({
+const ResetPassword = () => {
+  const [resetData, setResetData] = React.useState({
     email: "",
     password: "",
+    password_confirmation: "",
   });
 
+  const { token: passwordToken } = useParams();
   const { url } = useGlobalContext();
   const router = useRouter();
 
-  const handleLoginData = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const name = e.target.name;
-    const value = e.target.value;
+  const handleResetData = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
 
-    setLoginData((prev) => {
+    setResetData((prev) => {
       return {
         ...prev,
         [name]: value,
@@ -33,7 +27,7 @@ const Login = () => {
     });
   };
 
-  const handleSubmitLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  const resetPassword = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
@@ -42,26 +36,17 @@ const Login = () => {
       });
 
       if (token.csrf_token) {
-        const { data: login } = await axios.post(
-          `${url}/login`,
+        const { data: reset } = await axios.post(
+          `${url}/reset_password`,
+          { ...resetData, token: passwordToken },
           {
-            ...loginData,
-          },
-          {
-            headers: { "X-XSRF-TOKEN": getCookie("XSRF-TOKEN") },
             withCredentials: true,
+            headers: { "X-XSRF-TOKEN": getCookie("XSRF-TOKEN") },
           }
         );
 
-        if (login.success) {
-          if (login.isVerified) {
-            setCookie("jotter", login.user, {
-              sameSite: "lax",
-            });
-            router.push("/jotter");
-          } else {
-            router.push("/sending?type=verification");
-          }
+        if (reset.status) {
+          router.push("/login");
         }
       }
     } catch (error) {
@@ -73,15 +58,15 @@ const Login = () => {
     <div className="w-full h-full flex flex-col items-center justify-start">
       <div className="w-full h-full flex flex-col items-center justify-center max-w-screen-ll">
         <form
-          onSubmit={(e) => handleSubmitLogin(e)}
+          onSubmit={(e) => resetPassword(e)}
           className="max-w-screen-ml w-full flex flex-col items-start justify-center gap-4"
         >
           <div className="w-full flex flex-col items-start justify-center">
             <p className="font-black font-cormorant text-3xl t:text-5xl">
-              Capture Ideas Instantly
+              Reset Password
             </p>
             <p className="font-poppins text-sm font-light t:text-base">
-              Organize Your Thoughts Effortlessly
+              Enter your new password
             </p>
           </div>
 
@@ -91,8 +76,8 @@ const Login = () => {
               className="w-full p-2 focus:outline-none focus:border-accent border-2 transition-all text-complementary"
               placeholder="Email"
               name="email"
-              value={loginData.email}
-              onChange={(e) => handleLoginData(e)}
+              onChange={(e) => handleResetData(e)}
+              value={resetData.email}
             />
 
             <input
@@ -100,23 +85,25 @@ const Login = () => {
               className="w-full p-2 focus:outline-none focus:border-accent border-2 transition-all text-complementary"
               placeholder="Password"
               name="password"
-              value={loginData.password}
-              onChange={(e) => handleLoginData(e)}
+              onChange={(e) => handleResetData(e)}
+              value={resetData.password}
             />
 
-            <Link
-              href="/forgot"
-              className="mr-auto text-accent hover:underline hover:underline-offset-2"
-            >
-              Forgot Password
-            </Link>
+            <input
+              type="password"
+              className="w-full p-2 focus:outline-none focus:border-accent border-2 transition-all text-complementary"
+              placeholder="Confirm Password"
+              name="password_confirmation"
+              onChange={(e) => handleResetData(e)}
+              value={resetData.password_confirmation}
+            />
           </div>
 
           <button
             className=" w-full p-2 bg-complementary text-primary font-bold font-poppins hover:shadow-[0.3rem_0.3rem_#A67C58]
-                    transition-all"
+            transition-all"
           >
-            Login
+            Reset
           </button>
         </form>
       </div>
@@ -124,4 +111,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ResetPassword;
