@@ -6,6 +6,7 @@ import { useGlobalContext } from "@/context";
 import { getCookie, setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { getCSRFToken } from "@/src/utils/token";
 
 interface LoginData {
   email: string;
@@ -37,9 +38,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const { data: token } = await axios.get(`${url}/csrf_token`, {
-        withCredentials: true,
-      });
+      const token = await getCSRFToken();
 
       if (token.csrf_token) {
         const { data: login } = await axios.post(
@@ -48,7 +47,7 @@ const Login = () => {
             ...loginData,
           },
           {
-            headers: { "X-XSRF-TOKEN": getCookie("XSRF-TOKEN") },
+            headers: { "X-CSRF-TOKEN": token.csrf_token },
             withCredentials: true,
           }
         );

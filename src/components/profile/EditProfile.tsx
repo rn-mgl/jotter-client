@@ -1,4 +1,5 @@
 import { useGlobalContext } from "@/context";
+import { getCSRFToken } from "@/src/utils/token";
 import axios from "axios";
 import { getCookie } from "cookies-next";
 import React from "react";
@@ -95,9 +96,7 @@ const EditProfile: React.FC<EditProfileProps> = (props) => {
     e.preventDefault();
 
     try {
-      const { data: token } = await axios.get(`${url}/csrf_token`, {
-        withCredentials: true,
-      });
+      const token = await getCSRFToken();
 
       if (token.csrf_token) {
         const formData = new FormData();
@@ -111,7 +110,7 @@ const EditProfile: React.FC<EditProfileProps> = (props) => {
 
         const { data: updated } = await axios.post(`${url}/profile`, formData, {
           headers: {
-            "X-XSRF-TOKEN": getCookie("XSRF-TOKEN"),
+            "X-CSRF-TOKEN": token.csrf_token,
             "Content-Type": "multipart/form-data",
           },
           withCredentials: true,

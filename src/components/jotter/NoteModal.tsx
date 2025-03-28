@@ -1,6 +1,7 @@
 "use client";
 
 import { useGlobalContext } from "@/context";
+import { getCSRFToken } from "@/src/utils/token";
 import axios from "axios";
 import { getCookie } from "cookies-next";
 import Image from "next/image";
@@ -78,9 +79,7 @@ const NoteModal: React.FC<NoteModalProps> = (props) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const { data: token } = await axios.get(`${url}/csrf_token`, {
-        withCredentials: true,
-      });
+      const token = await getCSRFToken();
 
       const formData: any = new FormData();
       formData.append("title", noteData.title);
@@ -90,7 +89,7 @@ const NoteModal: React.FC<NoteModalProps> = (props) => {
       if (token.csrf_token) {
         const { data: note } = await axios.post(`${url}/note`, formData, {
           headers: {
-            "X-XSRF-TOKEN": getCookie("XSRF-TOKEN"),
+            "X-CSRF-TOKEN": token.csrf_token,
             "Content-Type": "mutipart/form-data",
           },
           withCredentials: true,

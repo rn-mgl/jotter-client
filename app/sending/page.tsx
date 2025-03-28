@@ -6,6 +6,7 @@ import Image from "next/image";
 import React, { Suspense } from "react";
 import sending from "@/public/global/sending.svg";
 import { useSearchParams } from "next/navigation";
+import { getCSRFToken } from "@/src/utils/token";
 
 const Message = () => {
   const { url } = useGlobalContext();
@@ -19,16 +20,14 @@ const Message = () => {
 
   const handleResendEmail = async () => {
     try {
-      const { data: token } = await axios.get(`${url}/csrf_token`, {
-        withCredentials: true,
-      });
+      const token = await getCSRFToken();
 
       if (token.csrf_token) {
         const { data: resend } = await axios.post(
           `${url}/email/verification-notification`,
           {},
           {
-            headers: { "X-XSRF-TOKEN": getCookie("XSRF-TOKEN") },
+            headers: { "X-CSRF-TOKEN": token.csrf_token },
             withCredentials: true,
           }
         );

@@ -1,5 +1,6 @@
 "use client";
 import { useGlobalContext } from "@/context";
+import { getCSRFToken } from "@/src/utils/token";
 import axios from "axios";
 import { getCookie } from "cookies-next";
 import { useParams, useRouter } from "next/navigation";
@@ -31,9 +32,7 @@ const ResetPassword = () => {
     e.preventDefault();
 
     try {
-      const { data: token } = await axios.get(`${url}/csrf_token`, {
-        withCredentials: true,
-      });
+      const token = await getCSRFToken();
 
       if (token.csrf_token) {
         const { data: reset } = await axios.post(
@@ -41,7 +40,7 @@ const ResetPassword = () => {
           { ...resetData, token: passwordToken },
           {
             withCredentials: true,
-            headers: { "X-XSRF-TOKEN": getCookie("XSRF-TOKEN") },
+            headers: { "X-CSRF-TOKEN": token.csrf_token },
           }
         );
 

@@ -12,6 +12,7 @@ import {
 } from "react-icons/ai";
 import { CiStickyNote } from "react-icons/ci";
 import DeleteConfirmation from "./DeleteConfirmation";
+import { getCSRFToken } from "@/src/utils/token";
 
 interface NoteProps {
   activeNote: number;
@@ -110,10 +111,7 @@ const Note: React.FC<NoteProps> = (props) => {
     e.preventDefault();
 
     try {
-      const { data: token } = await axios.get(`${url}/csrf_token`, {
-        withCredentials: true,
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const token = await getCSRFToken();
 
       const formData: any = new FormData();
       formData.append("title", noteData.title);
@@ -131,7 +129,7 @@ const Note: React.FC<NoteProps> = (props) => {
           `${url}/note/${props.activeNote}`,
           formData,
           {
-            headers: { "X-XSRF-TOKEN": getCookie("XSRF-TOKEN") },
+            headers: { "X-CSRF-TOKEN": token.csrf_token },
             withCredentials: true,
           }
         );

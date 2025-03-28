@@ -1,6 +1,7 @@
 "use client";
 import { useGlobalContext } from "@/context";
 import Logo from "@/src/components/global/Logo";
+import { getCSRFToken } from "@/src/utils/token";
 import axios from "axios";
 import { deleteCookie, getCookie } from "cookies-next";
 import Link from "next/link";
@@ -28,13 +29,11 @@ export default function RootLayout({
 
   const logout = async () => {
     try {
-      const { data: token } = await axios.get(`${url}/csrf_token`, {
-        withCredentials: true,
-      });
+      const token = await getCSRFToken();
 
       if (token.csrf_token) {
         const { data: logout } = await axios.delete(`${url}/logout`, {
-          headers: { "X-XSRF-TOKEN": getCookie("XSRF-TOKEN") },
+          headers: { "X-CSRF-TOKEN": token.csrf_token },
           withCredentials: true,
         });
 

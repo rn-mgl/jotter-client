@@ -1,6 +1,7 @@
 "use client";
 
 import { useGlobalContext } from "@/context";
+import { getCSRFToken } from "@/src/utils/token";
 import axios from "axios";
 import { getCookie } from "cookies-next";
 import React from "react";
@@ -18,15 +19,13 @@ const DeleteConfirmation: React.FC<DeleteConfirmationProps> = (props) => {
 
   const deleteNote = async () => {
     try {
-      const { data: token } = await axios.get(`${url}/csrf_token`, {
-        withCredentials: true,
-      });
+      const token = await getCSRFToken();
 
       if (token.csrf_token) {
         const { data: deleted } = await axios.delete(
           `${url}/note/${props.activeNote}`,
           {
-            headers: { "X-XSRF-TOKEN": getCookie("XSRF-TOKEN") },
+            headers: { "X-CSRF-TOKEN": token.csrf_token },
             withCredentials: true,
           }
         );

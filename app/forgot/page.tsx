@@ -21,9 +21,7 @@ const Forgot = () => {
     e.preventDefault();
 
     try {
-      const { data: token } = await axios.get(`${url}/csrf_token`, {
-        withCredentials: true,
-      });
+      const token = await getCSRFToken();
 
       if (token.csrf_token) {
         const { data: valid } = await axios.post(
@@ -32,7 +30,7 @@ const Forgot = () => {
           {
             withCredentials: true,
             headers: {
-              "X-XSRF-TOKEN": getCookie("XSRF-TOKEN"),
+              "X-CSRF-TOKEN": token.csrf_token,
             },
           }
         );

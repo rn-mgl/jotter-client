@@ -1,5 +1,6 @@
 "use client";
 import { useGlobalContext } from "@/context";
+import { getCSRFToken } from "@/src/utils/token";
 import axios from "axios";
 import { getCookie } from "cookies-next";
 import React from "react";
@@ -68,16 +69,14 @@ const ChangePassword: React.FC<ChangePasswordProps> = (props) => {
     e.preventDefault();
 
     try {
-      const { data: token } = await axios.get(`${url}/csrf_token`, {
-        withCredentials: true,
-      });
+      const token = await getCSRFToken();
 
       if (token.csrf_token) {
         const { data: updated } = await axios.post(
           `${url}/change_password`,
           { ...passwordData, _method: "PATCH" },
           {
-            headers: { "X-XSRF-TOKEN": getCookie("XSRF-TOKEN") },
+            headers: { "X-CSRF-TOKEN": token.csrf_token },
             withCredentials: true,
           }
         );
