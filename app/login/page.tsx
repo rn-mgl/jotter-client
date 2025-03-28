@@ -18,6 +18,8 @@ const Login = () => {
     password: "",
   });
 
+  const [messages, setMessages] = React.useState<string[]>([]);
+
   const url = process.env.NEXT_PUBLIC_API_URL;
   const router = useRouter();
 
@@ -39,6 +41,8 @@ const Login = () => {
     try {
       const token = await getCSRFToken();
 
+      setMessages((prev) => [...prev, `Token: ${token.csrf_token}`]);
+
       if (token.csrf_token) {
         const { data: login } = await axios.post(
           `${url}/login`,
@@ -50,6 +54,8 @@ const Login = () => {
             withCredentials: true,
           }
         );
+
+        setMessages((prev) => [...prev, `login: ${login.success}`]);
 
         if (login.success) {
           if (login.isVerified) {
@@ -66,13 +72,18 @@ const Login = () => {
           }
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
+      setMessages((prev) => [
+        ...prev,
+        `error: ${error?.response?.data?.message}`,
+      ]);
     }
   };
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-start">
+      <p>{messages.map((e) => e)}</p>
       <div className="w-full h-full flex flex-col items-center justify-center max-w-(--breakpoint-ll)">
         <form
           onSubmit={(e) => handleSubmitLogin(e)}

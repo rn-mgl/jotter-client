@@ -2,6 +2,7 @@
 
 import { getCSRFToken } from "@/src/utils/token";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 
 import React from "react";
 import { AiOutlineClose, AiOutlineDelete } from "react-icons/ai";
@@ -16,15 +17,21 @@ interface DeleteConfirmationProps {
 const DeleteConfirmation: React.FC<DeleteConfirmationProps> = (props) => {
   const url = process.env.NEXT_PUBLIC_API_URL;
 
+  const { data: session } = useSession({ required: true });
+  const user = session?.user;
+
   const deleteNote = async () => {
     try {
       const token = await getCSRFToken();
 
-      if (token.csrf_token) {
+      if (token.csrf_token && user?.token) {
         const { data: deleted } = await axios.delete(
           `${url}/note/${props.activeNote}`,
           {
-            headers: { "X-CSRF-TOKEN": token.csrf_token },
+            headers: {
+              "X-CSRF-TOKEN": token.csrf_token,
+              Authorization: `Bearer ${user?.token}`,
+            },
             withCredentials: true,
           }
         );
