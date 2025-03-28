@@ -43,17 +43,17 @@ const Login = () => {
 
       setMessages((prev) => [...prev, `Token: ${token.csrf_token}`]);
 
+      const formData = new FormData();
+
+      formData.append("email", loginData.email);
+      formData.append("password", loginData.password);
+      formData.append("_token", token.csrf_token);
+
       if (token.csrf_token) {
-        const { data: login } = await axios.post(
-          `${url}/login`,
-          {
-            ...loginData,
-          },
-          {
-            headers: { "X-CSRF-TOKEN": token.csrf_token },
-            withCredentials: true,
-          }
-        );
+        const { data: login } = await axios.post(`${url}/login`, formData, {
+          withCredentials: true,
+          headers: { "Content-Type": "multipart/form-data" },
+        });
 
         setMessages((prev) => [...prev, `login: ${login.success}`]);
 
