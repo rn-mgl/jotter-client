@@ -1,6 +1,6 @@
 import { useGlobalContext } from "@/context";
 import axios from "axios";
-import { getCookie } from "cookies-next";
+
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";

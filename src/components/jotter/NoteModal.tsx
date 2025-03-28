@@ -3,7 +3,7 @@
 import { useGlobalContext } from "@/context";
 import { getCSRFToken } from "@/src/utils/token";
 import axios from "axios";
-import { getCookie } from "cookies-next";
+
 import Image from "next/image";
 import React from "react";
 import {

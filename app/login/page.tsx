@@ -3,7 +3,6 @@
 import React from "react";
 import axios from "axios";
 import { useGlobalContext } from "@/context";
-import { getCookie, setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { getCSRFToken } from "@/src/utils/token";
@@ -54,9 +53,6 @@ const Login = () => {
 
         if (login.success) {
           if (login.isVerified) {
-            setCookie("jotter", login.user, {
-              sameSite: "lax",
-            });
             router.push("/jotter");
           } else {
             router.push("/sending?type=verification");

@@ -2,7 +2,7 @@
 import { useGlobalContext } from "@/context";
 import { getCSRFToken } from "@/src/utils/token";
 import axios from "axios";
-import { getCookie } from "cookies-next";
+
 import { useParams, useRouter } from "next/navigation";
 import React from "react";
 

@@ -1,7 +1,7 @@
 "use client";
 import { useGlobalContext } from "@/context";
 import axios from "axios";
-import { getCookie } from "cookies-next";
+
 import Image from "next/image";
 import React, { Suspense } from "react";
 import sending from "@/public/global/sending.svg";

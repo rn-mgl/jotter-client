@@ -3,7 +3,6 @@ import { useGlobalContext } from "@/context";
 import Logo from "@/src/components/global/Logo";
 import { getCSRFToken } from "@/src/utils/token";
 import axios from "axios";
-import { deleteCookie, getCookie } from "cookies-next";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
@@ -39,9 +38,6 @@ export default function RootLayout({
 
         if (logout.success) {
           router.push("/");
-          deleteCookie("jotter");
-          deleteCookie("jotter_session");
-          deleteCookie("XSRF-TOKEN");
         }
       }
     } catch (error) {
