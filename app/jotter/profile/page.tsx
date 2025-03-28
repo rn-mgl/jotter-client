@@ -54,7 +54,7 @@ const Profile = () => {
   return (
     <div className="w-full h-full flex flex-col items-center justify-start">
       <div className="w-full h-full flex flex-col items-center justify-start relative">
-        <div className="w-full flex flex-col h-full items-center justify-center gap-6 max-w-screen-ll t:flex-row t:gap-10">
+        <div className="w-full flex flex-col h-full items-center justify-center gap-6 max-w-(--breakpoint-ll) t:flex-row t:gap-10">
           {canEditProfile ? (
             <EditProfile
               getUserData={getUserData}

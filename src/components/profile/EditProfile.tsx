@@ -135,7 +135,7 @@ const EditProfile: React.FC<EditProfileProps> = (props) => {
       className="w-full h-full flex flex-col items-center justify-center fixed top-0 left-0 z-50 backdrop-blur-md animate-fadeIn p-4
         bg-complementary/30 t:p-8"
     >
-      <div className="w-full h-fit my-auto flex flex-col bg-primary rounded-md border-[1px] max-w-screen-ml">
+      <div className="w-full h-fit my-auto flex flex-col bg-primary rounded-md border-[1px] max-w-(--breakpoint-ml)">
         <div className="flex flex-row p-2 text-accent w-full items-center justify-between text-xl border-b-2 t">
           <div>
             <AiOutlineUser />
@@ -214,7 +214,7 @@ const EditProfile: React.FC<EditProfileProps> = (props) => {
             id="first_name"
             value={user.first_name}
             onChange={(e) => handleUserData(e)}
-            className="w-full border-b-[1px] border-accent p-2 bg-transparent outline-none"
+            className="w-full border-b-[1px] border-accent p-2 bg-transparent outline-hidden"
           />
 
           <input
@@ -224,7 +224,7 @@ const EditProfile: React.FC<EditProfileProps> = (props) => {
             id="last_name"
             value={user.last_name}
             onChange={(e) => handleUserData(e)}
-            className="w-full border-b-[1px] border-accent p-2 bg-transparent outline-none"
+            className="w-full border-b-[1px] border-accent p-2 bg-transparent outline-hidden"
           />
 
           <button className="w-full p-2 bg-complementary font-bold mt-2 text-primary hover:shadow-[0.2rem_0.2rem_#A67C58]">

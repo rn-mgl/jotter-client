@@ -61,7 +61,7 @@ const Message = () => {
 const Sending = () => {
   return (
     <div className="custom-grid-lines w-full h-full min-h-screen flex flex-col items-center justify-center p-4 pb-0 t:p-10 t:pb-0">
-      <div className="w-full h-full flex flex-col items-center justify-start max-w-screen-ls gap-6">
+      <div className="w-full h-full flex flex-col items-center justify-start max-w-(--breakpoint-ls) gap-6">
         <Image
           src={sending}
           alt="sending"

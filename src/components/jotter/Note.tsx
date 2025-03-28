@@ -153,7 +153,7 @@ const Note: React.FC<NoteProps> = (props) => {
       className="w-full h-full flex flex-col items-center justify-center fixed top-0 left-0 z-50 backdrop-blur-md animate-fadeIn p-4
             bg-complementary/30 t:p-8"
     >
-      <div className="w-full h-full flex flex-col bg-primary rounded-md border-[1px] max-w-screen-t">
+      <div className="w-full h-full flex flex-col bg-primary rounded-md border-[1px] max-w-(--breakpoint-t)">
         {activeDeleteConfirmation ? (
           <DeleteConfirmation
             handleActiveDeleteConfirmation={handleActiveDeleteConfirmation}
@@ -185,7 +185,7 @@ const Note: React.FC<NoteProps> = (props) => {
             id="title"
             placeholder="Edit Title..."
             value={noteData.title}
-            className="p-2 px-4 font-semibold bg-transparent outline-none"
+            className="p-2 px-4 font-semibold bg-transparent outline-hidden"
             onChange={(e) => handleNoteData(e)}
           />
 
@@ -194,7 +194,7 @@ const Note: React.FC<NoteProps> = (props) => {
             id="content"
             value={noteData.content}
             placeholder="Edit Content..."
-            className="bg-transparent p-4 w-full h-full resize-none focus:outline-none text-sm"
+            className="bg-transparent p-4 w-full h-full resize-none focus:outline-hidden text-sm"
             onChange={(e) => handleNoteData(e)}
           ></textarea>
 

@@ -112,7 +112,7 @@ const NoteModal: React.FC<NoteModalProps> = (props) => {
       className="w-full h-full flex flex-col items-center justify-center fixed top-0 left-0 z-50 backdrop-blur-md animate-fadeIn p-4
                 bg-complementary/30 t:p-8"
     >
-      <div className="w-full h-full flex flex-col bg-primary rounded-md border-[1px] max-w-screen-t">
+      <div className="w-full h-full flex flex-col bg-primary rounded-md border-[1px] max-w-(--breakpoint-t)">
         <div className="w-full flex flex-row items-center justify-between font-poppins p-2 border-b-2 text-accent">
           <p className="font-bold flex flex-row gap-2 items-center justify-start text-xl">
             <CiStickyNote />
@@ -137,14 +137,14 @@ const NoteModal: React.FC<NoteModalProps> = (props) => {
             name="title"
             id="title"
             placeholder="Title..."
-            className="p-2 px-4 font-semibold bg-transparent outline-none"
+            className="p-2 px-4 font-semibold bg-transparent outline-hidden"
             onChange={(e) => handleNoteData(e)}
             value={noteData.title}
           />
           <textarea
             name="content"
             id="content"
-            className="w-full h-full resize-none rounded-md focus:outline-none p-4 bg-transparent text-sm"
+            className="w-full h-full resize-none rounded-md focus:outline-hidden p-4 bg-transparent text-sm"
             placeholder="Jot down..."
             onChange={(e) => handleNoteData(e)}
             value={noteData.content}

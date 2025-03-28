@@ -68,10 +68,10 @@ const Register = () => {
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center">
-      <div className="w-full h-full flex flex-col items-center justify-center max-w-screen-ls">
+      <div className="w-full h-full flex flex-col items-center justify-center max-w-(--breakpoint-ls)">
         <form
           onSubmit={(e) => handleSubmitRegister(e)}
-          className="max-w-screen-ml w-full flex flex-col items-start justify-center gap-4"
+          className="max-w-(--breakpoint-ml) w-full flex flex-col items-start justify-center gap-4"
         >
           <div className="w-full flex flex-col items-start justify-center">
             <p className="font-black font-cormorant text-3xl t:text-5xl">
@@ -85,7 +85,7 @@ const Register = () => {
           <div className="flex flex-col w-full gap-2 items-center justify-center font-poppins text-sm">
             <input
               type="text"
-              className="w-full p-2 focus:outline-none focus:border-accent border-2 transition-all text-complementary"
+              className="w-full p-2 focus:outline-hidden focus:border-accent border-2 transition-all text-complementary"
               placeholder="First Name"
               name="first_name"
               value={registerData.first_name}
@@ -94,7 +94,7 @@ const Register = () => {
 
             <input
               type="text"
-              className="w-full p-2 focus:outline-none focus:border-accent border-2 transition-all text-complementary"
+              className="w-full p-2 focus:outline-hidden focus:border-accent border-2 transition-all text-complementary"
               placeholder="Last Name"
               name="last_name"
               value={registerData.last_name}
@@ -103,7 +103,7 @@ const Register = () => {
 
             <input
               type="email"
-              className="w-full p-2 focus:outline-none focus:border-accent border-2 transition-all text-complementary"
+              className="w-full p-2 focus:outline-hidden focus:border-accent border-2 transition-all text-complementary"
               placeholder="Email"
               name="email"
               value={registerData.email}
@@ -112,7 +112,7 @@ const Register = () => {
 
             <input
               type="password"
-              className="w-full p-2 focus:outline-none focus:border-accent border-2 transition-all text-complementary"
+              className="w-full p-2 focus:outline-hidden focus:border-accent border-2 transition-all text-complementary"
               placeholder="Password"
               name="password"
               value={registerData.password}
@@ -121,7 +121,7 @@ const Register = () => {
 
             <input
               type="password"
-              className="w-full p-2 focus:outline-none focus:border-accent border-2 transition-all text-complementary"
+              className="w-full p-2 focus:outline-hidden focus:border-accent border-2 transition-all text-complementary"
               placeholder="Confirm Password"
               name="password_confirmation"
               value={registerData.password_confirmation}

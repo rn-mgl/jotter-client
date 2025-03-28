@@ -86,7 +86,7 @@ const Jotter = () => {
   return (
     <div className="w-full h-full flex flex-col items-center justify-start">
       <div className="w-full h-full flex flex-col items-center justify-start relative">
-        <div className="w-full flex flex-col h-full items-center justify-start gap-6 max-w-screen-ll">
+        <div className="w-full flex flex-col h-full items-center justify-start gap-6 max-w-(--breakpoint-ll)">
           {canCreateNote ? (
             <NoteModal toggleModal={handleCanCreateNote} getNotes={getNotes} />
           ) : null}
@@ -99,7 +99,7 @@ const Jotter = () => {
             />
           ) : null}
 
-          <div className="flex flex-row items-center justify-center w-full ls:max-w-screen-ml ml-auto relative gap-2">
+          <div className="flex flex-row items-center justify-center w-full ls:max-w-(--breakpoint-ml) ml-auto relative gap-2">
             <div
               className="relative flex flex-row items-center justify-center w-full"
               title="Search"
@@ -107,7 +107,7 @@ const Jotter = () => {
               <input
                 type="text"
                 className="w-full p-2 bg-primary border-[1px] border-complementary focus:shadow-[0.2rem_0.2rem_#0D0D0D] 
-                        outline-none transition-all font-poppins text-sm"
+                        outline-hidden transition-all font-poppins text-sm"
                 placeholder={`Search ${
                   searchType === "title" ? "Title" : "Content"
                 }...`}

@@ -95,7 +95,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = (props) => {
       className="w-full h-full flex flex-col items-center justify-center fixed top-0 left-0 z-50 backdrop-blur-md animate-fadeIn p-4
     bg-complementary/30 t:p-8"
     >
-      <div className="w-full h-fit my-auto flex flex-col bg-primary rounded-md border-[1px] max-w-screen-ml">
+      <div className="w-full h-fit my-auto flex flex-col bg-primary rounded-md border-[1px] max-w-(--breakpoint-ml)">
         <div className="flex flex-row p-2 text-accent w-full items-center justify-between text-xl border-b-2 t">
           <div>
             <AiOutlineLock />
@@ -115,7 +115,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = (props) => {
           <div className="w-full relative flex flex-col items-center justify-center">
             <input
               type={passwordVisible.current_password ? "text" : "password"}
-              className="w-full p-2 focus:outline-none focus:border-accent border-2 transition-all text-complementary"
+              className="w-full p-2 focus:outline-hidden focus:border-accent border-2 transition-all text-complementary"
               placeholder="Current Password"
               name="current_password"
               value={passwordData.current_password}
@@ -138,7 +138,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = (props) => {
           <div className="w-full relative flex flex-col items-center justify-center">
             <input
               type={passwordVisible.password ? "text" : "password"}
-              className="w-full p-2 focus:outline-none focus:border-accent border-2 transition-all text-complementary"
+              className="w-full p-2 focus:outline-hidden focus:border-accent border-2 transition-all text-complementary"
               placeholder="New Password"
               name="password"
               value={passwordData.password}
@@ -160,7 +160,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = (props) => {
           <div className="w-full relative flex flex-col items-center justify-center">
             <input
               type={passwordVisible.password_confirmation ? "text" : "password"}
-              className="w-full p-2 focus:outline-none focus:border-accent border-2 transition-all text-complementary"
+              className="w-full p-2 focus:outline-hidden focus:border-accent border-2 transition-all text-complementary"
               placeholder="Confirm New Password"
               name="password_confirmation"
               value={passwordData.password_confirmation}

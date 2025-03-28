@@ -46,7 +46,7 @@ const DeleteConfirmation: React.FC<DeleteConfirmationProps> = (props) => {
       className="w-full h-full flex flex-col items-center justify-center fixed top-0 left-0 z-50 backdrop-blur-md animate-fadeIn p-4
             bg-complementary/30 t:p-8"
     >
-      <div className="w-full h-fit flex flex-col bg-primary rounded-md border-[1px] max-w-screen-ml font-poppins">
+      <div className="w-full h-fit flex flex-col bg-primary rounded-md border-[1px] max-w-(--breakpoint-ml) font-poppins">
         <div className="flex flex-row p-2 text-accent w-full items-center justify-between text-xl border-b-2 t">
           <div>
             <AiOutlineDelete />

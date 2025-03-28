@@ -47,10 +47,10 @@ const Forgot = () => {
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-start">
-      <div className="w-full h-full flex flex-col items-center justify-center max-w-screen-ll">
+      <div className="w-full h-full flex flex-col items-center justify-center max-w-(--breakpoint-ll)">
         <form
           onSubmit={(e) => forgotPassword(e)}
-          className="max-w-screen-ml w-full flex flex-col items-start justify-center gap-4"
+          className="max-w-(--breakpoint-ml) w-full flex flex-col items-start justify-center gap-4"
         >
           <div className="w-full flex flex-col items-start justify-center">
             <p className="font-black font-cormorant text-3xl t:text-5xl">
@@ -64,7 +64,7 @@ const Forgot = () => {
           <div className="flex flex-col w-full gap-2 items-center justify-center font-poppins text-sm">
             <input
               type="email"
-              className="w-full p-2 focus:outline-none focus:border-accent border-2 transition-all text-complementary"
+              className="w-full p-2 focus:outline-hidden focus:border-accent border-2 transition-all text-complementary"
               placeholder="Email"
               name="email"
               onChange={(e) => handleRegisteredEmail(e)}

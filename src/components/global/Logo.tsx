@@ -10,7 +10,7 @@ interface LogoProps {
 const Logo: React.FC<LogoProps> = (props) => {
   return (
     <div className="w-full flex flex-col items-center">
-      <div className="w-full flex flex-col justify-center max-w-screen-ll items-start">
+      <div className="w-full flex flex-col justify-center max-w-(--breakpoint-ll) items-start">
         <Link href={props.url || "/"}>
           <Image
             src={logo}
