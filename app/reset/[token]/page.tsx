@@ -13,7 +13,8 @@ const ResetPassword = () => {
     password_confirmation: "",
   });
 
-  const { token: passwordToken } = useParams();
+  const params = useParams();
+  const passwordToken = params?.token;
   const url = process.env.NEXT_PUBLIC_API_URL;
   const router = useRouter();
 

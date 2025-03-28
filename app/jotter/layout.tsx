@@ -3,7 +3,7 @@
 import Logo from "@/src/components/global/Logo";
 import { getCSRFToken } from "@/src/utils/token";
 import axios from "axios";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
@@ -18,10 +18,12 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const [activeMoreActions, setActiveMoreActions] = React.useState(false);
-  const [user, setUser] = React.useState<UserProps>();
+  const [userData, setUserData] = React.useState<UserProps>();
   const url = process.env.NEXT_PUBLIC_API_URL;
   const router = useRouter();
   const path = usePathname();
+  const { data: session } = useSession({ required: true });
+  const user = session?.user;
 
   const handleActiveMoreActions = () => {
     setActiveMoreActions((prev) => !prev);
@@ -31,9 +33,12 @@ export default function RootLayout({
     try {
       const token = await getCSRFToken();
 
-      if (token.csrf_token) {
+      if (token.csrf_token && user?.token) {
         const { data: logout } = await axios.delete(`${url}/logout`, {
-          headers: { "X-CSRF-TOKEN": token.csrf_token },
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+            "X-CSRF-TOKEN": token.csrf_token,
+          },
           withCredentials: true,
         });
 
@@ -48,17 +53,25 @@ export default function RootLayout({
 
   const getUser = React.useCallback(async () => {
     try {
-      const { data: user } = await axios.get(`${url}/profile`, {
-        withCredentials: true,
-      });
+      const token = await getCSRFToken();
 
-      if (user) {
-        setUser(user);
+      if (token.csrf_token && user?.token) {
+        const { data: responseData } = await axios.get(`${url}/profile`, {
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+            "X-CSRF-TOKEN": token.csrf_token,
+          },
+          withCredentials: true,
+        });
+
+        if (responseData) {
+          setUserData(responseData);
+        }
       }
     } catch (error) {
       console.log(error);
     }
-  }, [url]);
+  }, [url, user?.token]);
 
   React.useEffect(() => {
     getUser();
@@ -71,7 +84,9 @@ export default function RootLayout({
 
         <div className="flex flex-row gap-2 items-center justify-center">
           <Link
-            style={{ backgroundImage: user?.image ? `url(${user.image})` : "" }}
+            style={{
+              backgroundImage: userData?.image ? `url(${userData.image})` : "",
+            }}
             href={`/jotter/profile`}
             title="Profile"
             className={`w-8 h-8 min-w-8 min-h-8 bg-accent t:w-10 t:h-10 t:min-w-10 t:min-h-10 bg-center bg-cover

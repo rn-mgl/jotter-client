@@ -3,6 +3,7 @@
 import Note from "@/src/components/jotter/Note";
 import NoteCard from "@/src/components/jotter/NoteCard";
 import NoteModal from "@/src/components/jotter/NoteModal";
+import { getCSRFToken } from "@/src/utils/token";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import React from "react";
@@ -56,25 +57,30 @@ const Jotter = () => {
 
   const getNotes = React.useCallback(async () => {
     try {
-      const {
-        data: { notes },
-      } = await axios.get(`${url}/note`, {
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-        },
-        withCredentials: true,
-        params: {
-          search_value: searchValue,
-          search_type: searchType,
-        },
-      });
-      if (notes) {
-        setNotes(notes);
+      const token = await getCSRFToken();
+
+      if (token.csrf_token && user?.token) {
+        const {
+          data: { notes },
+        } = await axios.get(`${url}/note`, {
+          headers: {
+            "X-CSRF-TOKEN": token.csrf_token,
+            Authorization: `Bearer ${user?.token}`,
+          },
+          withCredentials: true,
+          params: {
+            search_value: searchValue,
+            search_type: searchType,
+          },
+        });
+        if (notes) {
+          setNotes(notes);
+        }
       }
     } catch (error) {
       console.log(error);
     }
-  }, [url, searchType, searchValue]);
+  }, [url, searchType, searchValue, user?.token]);
 
   const mappedNotes = notes.map((note, index) => {
     return (

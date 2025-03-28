@@ -2,6 +2,7 @@
 
 import ChangePassword from "@/src/components/profile/ChangePassword";
 import EditProfile from "@/src/components/profile/EditProfile";
+import { getCSRFToken } from "@/src/utils/token";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import React from "react";
@@ -38,18 +39,22 @@ const Profile = () => {
 
   const getUserData = React.useCallback(async () => {
     try {
-      const { data: userData } = await axios.get(`${url}/profile`, {
-        headers: { Authorization: `Bearer ${user?.token}` },
-        withCredentials: true,
-      });
+      const token = await getCSRFToken();
 
-      if (userData) {
-        setUserData(userData);
+      if (token.csrf_token && user?.token) {
+        const { data: userData } = await axios.get(`${url}/profile`, {
+          headers: { Authorization: `Bearer ${user?.token}` },
+          withCredentials: true,
+        });
+
+        if (userData) {
+          setUserData(userData);
+        }
       }
     } catch (error) {
       console.log(error);
     }
-  }, [url]);
+  }, [url, user?.token]);
 
   React.useEffect(() => {
     getUserData();
