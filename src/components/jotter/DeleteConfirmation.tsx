@@ -1,6 +1,5 @@
 "use client";
 
-import { useGlobalContext } from "@/context";
 import { getCSRFToken } from "@/src/utils/token";
 import axios from "axios";
 
@@ -15,7 +14,7 @@ interface DeleteConfirmationProps {
 }
 
 const DeleteConfirmation: React.FC<DeleteConfirmationProps> = (props) => {
-  const { url } = useGlobalContext();
+  const url = process.env.NEXT_PUBLIC_API_URL;
 
   const deleteNote = async () => {
     try {

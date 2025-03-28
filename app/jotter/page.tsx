@@ -1,9 +1,10 @@
 "use client";
-import { useGlobalContext } from "@/context";
+
 import Note from "@/src/components/jotter/Note";
 import NoteCard from "@/src/components/jotter/NoteCard";
 import NoteModal from "@/src/components/jotter/NoteModal";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 import React from "react";
 import { AiOutlinePlus, AiOutlineSearch } from "react-icons/ai";
 import { MdFilterList, MdFilterListOff } from "react-icons/md";
@@ -26,7 +27,10 @@ const Jotter = () => {
     "title"
   );
 
-  const { url } = useGlobalContext();
+  const url = process.env.NEXT_PUBLIC_API_URL;
+
+  const { data: session } = useSession({ required: true });
+  const user = session?.user;
 
   const handleCanCreateNote = () => {
     setCanCreateNote((prev) => !prev);
@@ -53,8 +57,11 @@ const Jotter = () => {
   const getNotes = React.useCallback(async () => {
     try {
       const {
-        data: { notes, user },
+        data: { notes },
       } = await axios.get(`${url}/note`, {
+        headers: {
+          Authorization: `Bearer ${user?.token}`,
+        },
         withCredentials: true,
         params: {
           search_value: searchValue,

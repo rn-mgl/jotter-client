@@ -2,7 +2,7 @@
 
 import React from "react";
 import axios from "axios";
-import { useGlobalContext } from "@/context";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { getCSRFToken } from "@/src/utils/token";
@@ -18,7 +18,7 @@ const Login = () => {
     password: "",
   });
 
-  const { url } = useGlobalContext();
+  const url = process.env.NEXT_PUBLIC_API_URL;
   const router = useRouter();
 
   const handleLoginData = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,7 +53,14 @@ const Login = () => {
 
         if (login.success) {
           if (login.isVerified) {
-            router.push("/jotter");
+            const creds = await signIn("credentials", {
+              token: login.user,
+              redirect: false,
+            });
+
+            if (creds?.ok) {
+              router.push("/jotter");
+            }
           } else {
             router.push("/sending?type=verification");
           }

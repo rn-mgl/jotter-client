@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @theme {
   --background-image-gradient-radial: radial-gradient(var(--tw-gradient-stops));
@@ -83,4 +83,8 @@
   .custom-grid-lines {
     background-size: 12rem 12rem;
   }
+}
+
+button {
+  cursor: pointer;
 }

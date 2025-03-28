@@ -1,4 +1,3 @@
-import { useGlobalContext } from "@/context";
 import axios from "axios";
 
 import Image from "next/image";
@@ -43,7 +42,7 @@ const Note: React.FC<NoteProps> = (props) => {
     React.useState(false);
   const fileRef = React.useRef<HTMLInputElement>(null);
 
-  const { url } = useGlobalContext();
+  const url = process.env.NEXT_PUBLIC_API_URL;
 
   const getNoteData = React.useCallback(async () => {
     try {

@@ -1,8 +1,9 @@
 "use client";
-import { useGlobalContext } from "@/context";
+
 import ChangePassword from "@/src/components/profile/ChangePassword";
 import EditProfile from "@/src/components/profile/EditProfile";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 import React from "react";
 import { AiOutlineEdit, AiOutlineLock } from "react-icons/ai";
 
@@ -14,7 +15,7 @@ interface UserProps {
 }
 
 const Profile = () => {
-  const [user, setUser] = React.useState<UserProps>({
+  const [userData, setUserData] = React.useState<UserProps>({
     email: "",
     first_name: "",
     last_name: "",
@@ -23,7 +24,9 @@ const Profile = () => {
   const [canEditProfile, setCanEditProfile] = React.useState(false);
   const [canChangePassword, setCanChangePassword] = React.useState(false);
 
-  const { url } = useGlobalContext();
+  const url = process.env.NEXT_PUBLIC_API_URL;
+  const { data: session } = useSession({ required: true });
+  const user = session?.user;
 
   const handleCanEditProfile = () => {
     setCanEditProfile((prev) => !prev);
@@ -35,12 +38,13 @@ const Profile = () => {
 
   const getUserData = React.useCallback(async () => {
     try {
-      const { data: user } = await axios.get(`${url}/profile`, {
+      const { data: userData } = await axios.get(`${url}/profile`, {
+        headers: { Authorization: `Bearer ${user?.token}` },
         withCredentials: true,
       });
 
-      if (user) {
-        setUser(user);
+      if (userData) {
+        setUserData(userData);
       }
     } catch (error) {
       console.log(error);
@@ -67,7 +71,9 @@ const Profile = () => {
           ) : null}
 
           <div
-            style={{ backgroundImage: user.image && `url(${user.image})` }}
+            style={{
+              backgroundImage: userData.image && `url(${userData.image})`,
+            }}
             className="aspect-square bg-accent/30 w-full ls:max-w-96 bg-center bg-cover"
           ></div>
 
@@ -83,17 +89,17 @@ const Profile = () => {
             </button>
             <div className="w-full ">
               <p className="font-cormorant text-4xl font-extrabold">
-                {user.first_name}
+                {userData.first_name}
               </p>
               <p className="font-poppins text-lg font-light">
-                {user.last_name}
+                {userData.last_name}
               </p>
             </div>
 
             <div className="w-full h-[1px] bg-complementary/30"></div>
 
             <p className="font-poppins text-sm font-light italic">
-              {user.email}
+              {userData.email}
             </p>
 
             <button

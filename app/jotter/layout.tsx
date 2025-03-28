@@ -1,8 +1,9 @@
 "use client";
-import { useGlobalContext } from "@/context";
+
 import Logo from "@/src/components/global/Logo";
 import { getCSRFToken } from "@/src/utils/token";
 import axios from "axios";
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
@@ -18,7 +19,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   const [activeMoreActions, setActiveMoreActions] = React.useState(false);
   const [user, setUser] = React.useState<UserProps>();
-  const { url } = useGlobalContext();
+  const url = process.env.NEXT_PUBLIC_API_URL;
   const router = useRouter();
   const path = usePathname();
 
@@ -37,7 +38,7 @@ export default function RootLayout({
         });
 
         if (logout.success) {
-          router.push("/");
+          const creds = await signOut({ callbackUrl: "/", redirect: true });
         }
       }
     } catch (error) {

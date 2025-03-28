@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
-import { Poppins, Cormorant_Garamond } from "next/font/google";
+"use client";
+
+import { SessionProvider } from "next-auth/react";
+import { Cormorant_Garamond, Poppins } from "next/font/google";
 import "./globals.css";
-import { AppProvider } from "@/context";
 
 const poppins = Poppins({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -17,25 +18,20 @@ const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
 });
 
-export const metadata: Metadata = {
-  title: "Jotter",
-  description: "Another note taking app.",
-};
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <AppProvider>
+    <SessionProvider>
+      <html lang="en">
         <body
           className={`${cormorant.variable} ${poppins.variable} scroll-smooth bg-primary`}
         >
           {children}
         </body>
-      </AppProvider>
-    </html>
+      </html>
+    </SessionProvider>
   );
 }

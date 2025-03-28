@@ -1,4 +1,3 @@
-import { useGlobalContext } from "@/context";
 import { getCSRFToken } from "@/src/utils/token";
 import axios from "axios";
 
@@ -37,7 +36,7 @@ const EditProfile: React.FC<EditProfileProps> = (props) => {
   });
   const [selectedFile, setSelectedFile] = React.useState<SelectedFileProps>();
 
-  const { url } = useGlobalContext();
+  const url = process.env.NEXT_PUBLIC_API_URL;
 
   const handleUserData = (e: React.ChangeEvent<HTMLInputElement>) => {
     const name = e.target.name;

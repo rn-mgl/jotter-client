@@ -1,6 +1,5 @@
 "use client";
 
-import { useGlobalContext } from "@/context";
 import { getCSRFToken } from "@/src/utils/token";
 import axios from "axios";
 
@@ -38,7 +37,7 @@ const NoteModal: React.FC<NoteModalProps> = (props) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const fileRef = React.useRef<HTMLInputElement>(null);
 
-  const { url } = useGlobalContext();
+  const url = process.env.NEXT_PUBLIC_API_URL;
 
   const handleNoteData = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

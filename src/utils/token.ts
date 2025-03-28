@@ -7,5 +7,5 @@ export const getCSRFToken = async () => {
     withCredentials: true,
   });
 
-  return data.token;
+  return data;
 };

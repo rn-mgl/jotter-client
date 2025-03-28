@@ -1,6 +1,5 @@
 "use client";
 
-import { useGlobalContext } from "@/context";
 import { getCSRFToken } from "@/src/utils/token";
 import axios from "axios";
 
@@ -24,7 +23,7 @@ const Register = () => {
     password_confirmation: "",
   });
 
-  const { url } = useGlobalContext();
+  const url = process.env.NEXT_PUBLIC_API_URL;
   const router = useRouter();
 
   const handleRegisterData = (e: React.ChangeEvent<HTMLInputElement>) => {

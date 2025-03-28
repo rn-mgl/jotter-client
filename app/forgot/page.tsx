@@ -1,5 +1,5 @@
 "use client";
-import { useGlobalContext } from "@/context";
+
 import { getCSRFToken } from "@/src/utils/token";
 import axios from "axios";
 
@@ -9,7 +9,7 @@ import React from "react";
 const Forgot = () => {
   const [registeredEmail, setRegisteredEmail] = React.useState("");
 
-  const { url } = useGlobalContext();
+  const url = process.env.NEXT_PUBLIC_API_URL;
   const router = useRouter();
 
   const handleRegisteredEmail = (e: React.ChangeEvent<HTMLInputElement>) => {

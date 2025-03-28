@@ -1,5 +1,5 @@
 "use client";
-import { useGlobalContext } from "@/context";
+
 import axios from "axios";
 
 import Image from "next/image";
@@ -9,7 +9,7 @@ import { useSearchParams } from "next/navigation";
 import { getCSRFToken } from "@/src/utils/token";
 
 const Message = () => {
-  const { url } = useGlobalContext();
+  const url = process.env.NEXT_PUBLIC_API_URL;
   const params = useSearchParams();
   const type = params.get("type");
 

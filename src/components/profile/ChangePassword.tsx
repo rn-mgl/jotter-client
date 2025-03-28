@@ -1,5 +1,5 @@
 "use client";
-import { useGlobalContext } from "@/context";
+
 import { getCSRFToken } from "@/src/utils/token";
 import axios from "axios";
 
@@ -40,7 +40,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = (props) => {
       password_confirmation: false,
     });
 
-  const { url } = useGlobalContext();
+  const url = process.env.NEXT_PUBLIC_API_URL;
 
   const handlePasswordData = (e: React.ChangeEvent<HTMLInputElement>) => {
     const name = e.target.name;

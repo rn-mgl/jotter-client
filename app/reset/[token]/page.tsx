@@ -1,5 +1,5 @@
 "use client";
-import { useGlobalContext } from "@/context";
+
 import { getCSRFToken } from "@/src/utils/token";
 import axios from "axios";
 
@@ -14,7 +14,7 @@ const ResetPassword = () => {
   });
 
   const { token: passwordToken } = useParams();
-  const { url } = useGlobalContext();
+  const url = process.env.NEXT_PUBLIC_API_URL;
   const router = useRouter();
 
   const handleResetData = (e: React.ChangeEvent<HTMLInputElement>) => {
