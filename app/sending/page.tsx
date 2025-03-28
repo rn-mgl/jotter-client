@@ -11,7 +11,7 @@ import { getCSRFToken } from "@/src/utils/token";
 const Message = () => {
   const url = process.env.NEXT_PUBLIC_API_URL;
   const params = useSearchParams();
-  const type = params.get("type");
+  const type = params?.get("type");
 
   const message = {
     verification: "We are currently sending your verification mail.",
