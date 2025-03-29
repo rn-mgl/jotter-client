@@ -12,6 +12,7 @@ import {
 import { CiStickyNote } from "react-icons/ci";
 import DeleteConfirmation from "./DeleteConfirmation";
 import { getCSRFToken } from "@/src/utils/token";
+import { useSession } from "next-auth/react";
 
 interface NoteProps {
   activeNote: number;
@@ -41,23 +42,35 @@ const Note: React.FC<NoteProps> = (props) => {
   const [activeDeleteConfirmation, setActiveDeleteConfirmation] =
     React.useState(false);
   const fileRef = React.useRef<HTMLInputElement>(null);
+  const { data: session } = useSession({ required: true });
+  const user = session?.user;
 
   const url = process.env.NEXT_PUBLIC_API_URL;
 
   const getNoteData = React.useCallback(async () => {
     try {
-      const { data: note } = await axios.get(
-        `${url}/note/${props.activeNote}`,
-        { withCredentials: true }
-      );
+      const token = await getCSRFToken();
 
-      if (note) {
-        setNoteData(note);
+      if (token.csrf_token && user?.token) {
+        const { data: note } = await axios.get(
+          `${url}/note/${props.activeNote}`,
+          {
+            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+              "X-CSRF-TOKEN": token.csrf_token,
+            },
+          }
+        );
+
+        if (note) {
+          setNoteData(note);
+        }
       }
     } catch (error) {
       console.log(error);
     }
-  }, [url, props.activeNote]);
+  }, [url, props.activeNote, user?.token]);
 
   const handleNoteData = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -123,12 +136,15 @@ const Note: React.FC<NoteProps> = (props) => {
         formData.append("file_content", noteData.file_content);
       }
 
-      if (token.csrf_token) {
+      if (token.csrf_token && user?.token) {
         const { data: note } = await axios.post(
           `${url}/note/${props.activeNote}`,
           formData,
           {
-            headers: { "X-CSRF-TOKEN": token.csrf_token },
+            headers: {
+              "X-CSRF-TOKEN": token.csrf_token,
+              Authorization: `Bearer ${user.token}`,
+            },
             withCredentials: true,
           }
         );

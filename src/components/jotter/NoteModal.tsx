@@ -2,6 +2,7 @@
 
 import { getCSRFToken } from "@/src/utils/token";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 
 import Image from "next/image";
 import React from "react";
@@ -36,7 +37,8 @@ const NoteModal: React.FC<NoteModalProps> = (props) => {
   const [selectedFile, setSelectedFile] = React.useState<SelectedFileProps>();
   const [isLoading, setIsLoading] = React.useState(false);
   const fileRef = React.useRef<HTMLInputElement>(null);
-
+  const { data: session } = useSession({ required: true });
+  const user = session?.user;
   const url = process.env.NEXT_PUBLIC_API_URL;
 
   const handleNoteData = (
@@ -85,11 +87,12 @@ const NoteModal: React.FC<NoteModalProps> = (props) => {
       formData.append("content", noteData.content);
       formData.append("file_content", selectedFile?.raw);
 
-      if (token.csrf_token) {
+      if (token.csrf_token && user?.token) {
         const { data: note } = await axios.post(`${url}/note`, formData, {
           headers: {
             "X-CSRF-TOKEN": token.csrf_token,
             "Content-Type": "mutipart/form-data",
+            Authorization: `Bearer ${user.token}`,
           },
           withCredentials: true,
         });
