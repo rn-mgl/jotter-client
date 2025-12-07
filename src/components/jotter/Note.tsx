@@ -64,7 +64,11 @@ const Note: React.FC<NoteProps> = (props) => {
         );
 
         if (note) {
-          setNoteData(note);
+          setNoteData({
+            title: note.title ?? "",
+            content: note.content ?? "",
+            file_content: note.file_content ?? "",
+          });
         }
       }
     } catch (error) {
