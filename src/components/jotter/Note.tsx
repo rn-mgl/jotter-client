@@ -126,14 +126,14 @@ const Note: React.FC<NoteProps> = (props) => {
       const token = await getCSRFToken();
 
       const formData: any = new FormData();
-      formData.append("title", noteData.title);
-      formData.append("content", noteData.content);
-      formData.append("_method", "PATCH");
+      formData.set("title", noteData.title ?? null);
+      formData.set("content", noteData.content ?? null);
+      formData.set("_method", "PATCH");
 
       if (selectedFile?.raw) {
-        formData.append("file_content", selectedFile?.raw);
+        formData.set("file_content", selectedFile?.raw ?? null);
       } else if (noteData.file_content) {
-        formData.append("file_content", noteData.file_content);
+        formData.set("file_content", noteData.file_content ?? null);
       }
 
       if (token.csrf_token && user?.token) {
