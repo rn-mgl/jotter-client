@@ -83,9 +83,9 @@ const NoteModal: React.FC<NoteModalProps> = (props) => {
       const token = await getCSRFToken();
 
       const formData: any = new FormData();
-      formData.append("title", noteData.title);
-      formData.append("content", noteData.content);
-      formData.append("file_content", selectedFile?.raw);
+      formData.set("title", noteData.title ?? null);
+      formData.set("content", noteData.content ?? null);
+      formData.set("file_content", selectedFile?.raw ?? null);
 
       if (token.csrf_token && user?.token) {
         const { data: note } = await axios.post(`${url}/note`, formData, {
